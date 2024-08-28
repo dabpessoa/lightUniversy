@@ -14,22 +14,16 @@ var GameLogics = function () {
   this.render = function (gameCanvas) {
     var selfParticles = this.particles;
     return function () {
-      console.log('render...');
       // Clear screen.
       gameCanvas.clear();
-
-      // Draw Particles background.
-      selfParticles.draw();
     }
   };
 
   this.update = function () {
     var selfParticles = this.particles;
     return function (time) {
-      console.log('update... Time: '+time);
-
-      // Update Particles background.
-      selfParticles.update(time);
+      // Drawing and Updating Particles background.
+      selfParticles.drawAndUpdate(time);
     }
   };
 

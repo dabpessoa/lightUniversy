@@ -29,8 +29,8 @@ var GameLoop = function(renderLogics, updateLogics) {
     var elapsedTime = now - previousTime;
     previousTime = now;
     
-    this.update(elapsedTime);
     this.render();
+    this.update(elapsedTime);
 
     if (this.isRunning()) {
             var thisGame = this;
