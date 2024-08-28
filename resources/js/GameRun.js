@@ -11,7 +11,11 @@ var GameRun = function() {
     const functionRender = gameLogics.render(gameCanvas);
     const functionUpdate = gameLogics.update();
 
-    const gameLoop = new GameLoop(functionRender, functionUpdate);
+    const gameLoop = new GameLoop({
+      'renderLogics': functionRender, 
+      'updateLogics': functionUpdate,
+      'fps': new FPS({'fps': 240}) 
+    });
 
     this.init = function() {
       gameLoop.start();
