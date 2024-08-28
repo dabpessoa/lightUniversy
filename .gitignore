@@ -1,0 +1,80 @@
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+/dist-packages
+/target
+dist-electron
+build
+out
+bin
+classes
+test-output
+
+# Logs
+/log
+*.log
+
+# Dependencies
+/node_modules
+
+# Cordova
+/www
+/plugins
+/platforms
+
+# Electron
+/electron.main.js
+
+# IDEs and editors
+.idea/*
+!.idea/runConfigurations/
+!.idea/codeStyleSettings.xml
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+xcuserdata/
+*.sublime-workspace
+.metadata
+*.iml
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+/reports
+/src/translations/template.*
+# /src/environments/.env.*
+
+# System Files
+.DS_Store
+
+# build-analytics
+.build-analytics
+
+# User specific bazel settings
+.bazelrc.user
+
+# User specific ng-dev settings
+.ng-dev.user*
+
+# Husky
+.husky/_
+
+# Ignore cache created with the Angular CLI.
+.angular/
