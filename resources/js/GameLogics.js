@@ -8,7 +8,6 @@ var GameLogics = function () {
     this.particles = new Particles({
       'gameCanvas': gameCanvas
     });
-    // this.particles.animate();
   }
 
   this.render = function (gameCanvas) {

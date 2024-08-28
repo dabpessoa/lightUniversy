@@ -1,7 +1,3 @@
-function random(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
 class Particle {
     constructor({ gameCanvas, totalParticles, particleNumber, color }) {
         this.gameCanvas = gameCanvas;
@@ -16,12 +12,12 @@ class Particle {
         this.minSpeed = .005;
         this.maxSpeed = .1;
 
-        this.radius = random(this.minRadius, this.maxRadius),
-            this.xPos = random(0, this.gameCanvas.getCanvas().width),
-            this.yPos = random(0, this.gameCanvas.getCanvas().height / this.totalParticles * this.particleNumber),
-            this.xVelocity = random(this.minSpeed, this.maxSpeed),
-            this.yVelocity = random(this.minSpeed, this.maxSpeed),
-            this.color = 'rgba(' + this.color + ',' + random(this.minOpacity, this.maxOpacity) + ')'
+        this.radius = random(this.minRadius, this.maxRadius);
+        this.xPos = random(0, this.gameCanvas.getCanvas().width);
+        this.yPos = random(0, this.gameCanvas.getCanvas().height / this.totalParticles * this.particleNumber);
+        this.xVelocity = random(this.minSpeed, this.maxSpeed);
+        this.yVelocity = random(this.minSpeed, this.maxSpeed);
+        this.color = 'rgba(' + this.color + ',' + random(this.minOpacity, this.maxOpacity) + ')';
     }
 
     draw() {

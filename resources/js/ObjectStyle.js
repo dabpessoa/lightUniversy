@@ -1,23 +1,35 @@
-var ObjectStyle = function(fillStyle) {
+var ObjectStyle = function({fillStyle, lineWidth, strokeStyle, shadow}) {
   this.fillStyle = fillStyle || 'black';
-  this.lineWidth = undefined;
-  this.strokeStyle = undefined;
-  this.shadow = {
-    color: '#000',
-    blur: 20,
-    offSetX: 10,
-    offSetY: 10
+  this.lineWidth = lineWidth;
+  this.strokeStyle = strokeStyle;
+  this.shadow = shadow || {
+    color: undefined,
+    blur: undefined,
+    offSetX: undefined,
+    offSetY: undefined
   };
+
   this.checkStyle = function(context) {
     if (this.fillStyle) {
       context.fillStyle = this.fillStyle;
     }
 
     if (this.shadow) {
-      context.shadowColor = this.shadow.color;
-      context.shadowBlur = this.shadow.blur;
-      context.shadowOffsetX = this.shadow.offSetX;
-      context.shadowOffsetY = this.shadow.offSetY;
+      if (this.shadow.color) {
+        context.shadowColor = this.shadow.color;
+      }
+
+      if (this.shadow.blur) {
+        context.shadowBlur = this.shadow.blur;
+      }
+      
+      if (this.shadow.offSetX) {
+        context.shadowOffsetX = this.shadow.offSetX;
+      }
+      
+      if (this.shadow.offSetY) {
+        context.shadowOffsetY = this.shadow.offSetY;
+      }
     }
 
     if (this.fillStyle || this.shadow) {
@@ -32,4 +44,5 @@ var ObjectStyle = function(fillStyle) {
       context.stroke();
     }
   }
+
 }
