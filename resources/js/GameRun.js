@@ -2,6 +2,11 @@ var GameRun = function() {
   if (GameLoop && GameCanvas && GameLogics) {
     const gameCanvas = new GameCanvas('canvas', '2d');
     const gameLogics = new GameLogics();
+    
+    // Cria e prepara valores e variáveis.
+    gameLogics.create({
+      'gameCanvas': gameCanvas
+    });
 
     const functionRender = gameLogics.render(gameCanvas);
     const functionUpdate = gameLogics.update();

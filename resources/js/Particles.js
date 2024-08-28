@@ -61,19 +61,11 @@ class Particles {
         this.colors = [
             '255, 255, 255',
         ];
-        this.particlesArray = [];
-    }
-
-    init() {
-        this.gameCanvas.getCanvas().width = window.innerWidth;
-        this.gameCanvas.getCanvas().height = window.innerHeight;
-
-        this.particlesArray = this.createParticles()
-        this.animate();
+        this.particlesArray = this.createParticles();
     }
 
     createParticles() {
-        var array = [];
+        var array = []
         for (var i = 0; i < this.numParticles; i++) {
             array.push(new Particle({
                 'gameCanvas': this.gameCanvas,
@@ -85,9 +77,21 @@ class Particles {
         return array;
     }
 
-    drawAndUpdate() {
-        this.gameCanvas.clear();
+    draw() {
+        for (var i = 0; i < this.numParticles; i++) {
+            this.particlesArray[i].draw();
+        }
+    }
 
+    update(time) {
+        for (var i = 0; i < this.numParticles; i++) {
+            // update
+            this.particlesArray[i].update();
+            this.particlesArray[i].checkReset();
+        }
+    }
+
+    drawAndUpdate(time) {
         for (var i = 0; i < this.numParticles; i++) {
             // draw
             this.particlesArray[i].draw();
@@ -101,14 +105,9 @@ class Particles {
     animate() {
         var self = this;
         setInterval(function () {
+            self.gameCanvas.clear();
             self.drawAndUpdate();
         }, 1000 / this.fps);
     }
 
 }
-
-const particles = new Particles({
-    'gameCanvas': new GameCanvas('canvas', '2d')
-});
-
-particles.init();
