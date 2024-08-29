@@ -1,7 +1,6 @@
 class GameLogics {
   constructor({gameCanvas}) {
     this.gameCanvas = gameCanvas;
-
     this.gameCanvas.getCanvas().width = window.innerWidth;
     this.gameCanvas.getCanvas().height = window.innerHeight;
 
@@ -10,20 +9,20 @@ class GameLogics {
     });
   }
 
-  render(gameCanvas) {
-    var selfGameCanvas = this.gameCanvas;
-    return function () {
-      // Clear screen.
-      selfGameCanvas.clear();
-    }
+  render() {
+    // Clear screen.
+    this.gameCanvas.clear();
+
+    // Drawing and Updating Particles background.
+    this.particles.drawAndUpdate();
+
+
+    this.gameCanvas.context.fillStyle = 'red';
+    this.gameCanvas.context.fillRect(10, 10, 200, 200);
   };
 
-  update() {
-    var selfParticles = this.particles;
-    return function (time) {
-      // Drawing and Updating Particles background.
-      selfParticles.drawAndUpdate(time);
-    }
+  update(time) {
+    
   };
 
 }

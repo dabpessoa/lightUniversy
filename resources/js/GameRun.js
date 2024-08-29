@@ -4,8 +4,7 @@ class GameRun {
     this.gameLogics = new GameLogics({"gameCanvas": this.gameCanvas});
 
     this.gameLoop = new GameLoop({
-      'renderLogics': this.gameLogics.render(this.gameCanvas), 
-      'updateLogics': this.gameLogics.update(),
+      'gameLogics': this.gameLogics,
       'fps': new FPS({'fps': 120}) 
     });
   }

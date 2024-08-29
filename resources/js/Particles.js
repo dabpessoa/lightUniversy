@@ -79,7 +79,7 @@ class Particles {
         }
     }
 
-    update(time) {
+    update() {
         for (var i = 0; i < this.numParticles; i++) {
             // update
             this.particlesArray[i].update();
@@ -87,7 +87,7 @@ class Particles {
         }
     }
 
-    drawAndUpdate(time) {
+    drawAndUpdate() {
         for (var i = 0; i < this.numParticles; i++) {
             // draw
             this.particlesArray[i].draw();

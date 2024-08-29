@@ -1,11 +1,13 @@
 class GameLoop {
-  constructor({renderLogics, updateLogics, fps = new FPS({'fps': 120}), loopsToSleep = 600}) {
+  constructor({gameLogics, fps = new FPS({'fps': 120}), loopsToSleep = 600}) {
     this.gameFrameVariable = undefined;
     this.running = false;
     this.fps = fps;
     this.loopsToSleep = loopsToSleep;
-    this.render = renderLogics || function () { console.log("Você deve sobrescrever a função de 'render' do gameloop.") };
-    this.update = updateLogics || function (elapsedTime) { console.log("Você deve sobrescrever a função de 'update' do gameloop.") };
+    this.gameLogics = gameLogics;
+    if (!this.gameLogics || !this.gameLogics.render || !this.gameLogics.update) {
+      console.log("Você deve criar os métodos 'render' e 'update(time)' na classe 'GameLogics'.");
+    }
   }
 
   start() {
@@ -33,8 +35,8 @@ class GameLoop {
     previousTime = now;
 
     if (this.fps.tick({"elapsedTime": elapsedTime})) {
-      this.render();
-      this.update(elapsedTime);
+      this.gameLogics.render();
+      this.gameLogics.update(elapsedTime);
     }
 
     // Quando atingir determinada quantidade de loops, dormir por um curto espaço de tempo para desafogar o processador.
