@@ -14,7 +14,7 @@ var GameRun = function() {
     const gameLoop = new GameLoop({
       'renderLogics': functionRender, 
       'updateLogics': functionUpdate,
-      'fps': new FPS({'fps': 240}) 
+      'fps': new FPS({'fps': 120}) 
     });
 
     this.init = function() {
@@ -27,6 +27,10 @@ var GameRun = function() {
 
     this.fullscreen = function() {
       gameLoop.fullScreen(gameCanvas.getCanvas());
+    }
+
+    this.getGameLoop = function() {
+      return gameLoop;
     }
   }
 }

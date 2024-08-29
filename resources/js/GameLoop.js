@@ -1,7 +1,8 @@
-var GameLoop = function ({renderLogics, updateLogics, fps = new FPS({'fps': 120})}) {
+var GameLoop = function ({renderLogics, updateLogics, fps = new FPS({'fps': 120}), loopsToSleep = 600}) {
   this.gameFrameVariable = undefined;
   this.running = false;
   this.fps = fps;
+  this.loopsToSleep = loopsToSleep;
   this.render = renderLogics || function () { console.log("Você deve sobrescrever a função de 'render' do gameloop.") };
   this.update = updateLogics || function (elapsedTime) { console.log("Você deve sobrescrever a função de 'update' do gameloop.") };
 
@@ -15,7 +16,7 @@ var GameLoop = function ({renderLogics, updateLogics, fps = new FPS({'fps': 120}
   this.stop = function () {
     this.running = false;
     if (this.gameFrameVariable) {
-      this.cancelRequestAnimFrame()(this.gameFrameVariable);
+      window.cancelAnimationFrame(this.gameFrameVariable);
     }
     this.gameFrameVariable = undefined;
   };
@@ -24,42 +25,29 @@ var GameLoop = function ({renderLogics, updateLogics, fps = new FPS({'fps': 120}
     this.start();
   };
 
-  this.process = function (previousTime) {
-    if (this.fps.tick()) {
-      var now = performance.now();
-      var elapsedTime = now - previousTime;
-      previousTime = now;
+  this.process = async function (previousTime) {
+    var now = performance.now();
+    var elapsedTime = now - previousTime;
+    previousTime = now;
 
+    if (this.fps.tick({"elapsedTime": elapsedTime})) {
       this.render();
       this.update(elapsedTime);
     }
 
+    // Quando atingir determinada quantidade de loops, dormir por um curto espaço de tempo para desafogar o processador.
+    if (this.loopsToSleep && ((this.fps.tickCounter % this.loopsToSleep) == 0)) {
+      await sleep(100);
+    }
+
     if (this.isRunning()) {
       var thisGame = this;
-      this.gameFrameVariable = this.requestAnimFrame()(function () {
-        thisGame.process(previousTime);
-      });
+      this.gameFrameVariable = window.requestAnimationFrame(
+        function() {
+          thisGame.process(previousTime);
+        }
+      );
     }
-  };
-
-  this.requestAnimFrame = function (callback) {
-    return window.requestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-      window.oRequestAnimationFrame ||
-      window.msRequestAnimationFrame ||
-      function (callback) {
-        window.setTimeout(callback, 1000 / 60);
-      };
-  };
-
-  this.cancelRequestAnimFrame = function () {
-    return window.cancelAnimationFrame ||
-      window.webkitCancelRequestAnimationFrame ||
-      window.mozCancelRequestAnimationFrame ||
-      window.oCancelRequestAnimationFrame ||
-      window.msCancelRequestAnimationFrame ||
-      window.clearTimeout();
   };
 
   this.fullScreen = function (element) {
@@ -85,66 +73,55 @@ var GameLoop = function ({renderLogics, updateLogics, fps = new FPS({'fps': 120}
   this.isRunning = function () {
     return this.running;
   }
+
+  this.getFPS = function() {
+    return this.fps;
+  }
+
 };
 
-var FPS = function ({fps}) {
-  this.fps = fps || 60;
-  this.lastTickTime = undefined;
-  this.frameCounter = 0;
-  this.timeValueToUse = 1000; // Milliseconds.
-
-  // On every loop iterate, this tick method must be called.
-  this.tick = function () {
-    if (!this.lastTickTime) {
-      this.lastTickTime = this.now();
-    }
-
-    this.frameCounter++;
-    var ellapsedTime = this.ellapsedTime(this.lastTickTime);
-    var isReachedSecond = this.isReachedTheSecond(ellapsedTime);
-    var isReachedFrameRate = this.isReachedFrameRate();
-
-    if (isReachedFrameRate && !isReachedSecond) {
-      return false;
-    }
-
-    if (isReachedSecond && isReachedFrameRate) {
-      this.clear();
-    }
-
-    return true;
-  }
-
-  this.clear = function() {
+class FPS {
+  constructor({fps, interval = 1000 /* milliseconds */}) {
+    this.fps = fps
     this.lastTickTime = undefined;
-    this.frameCounter = 0;
+    this.interval = interval;
+    this.loopFrequency = interval / fps;
+    this.tickCounter = 0;
+    this.fpsCounter = 0;
+    this.intervalTimeCounter = 0;
+    this.loopFrequencyTimeCounter = 0;
+    this.timeBetweenTicks = undefined;
   }
 
-  // FPS rate is based on a second.
-  this.isReachedTheSecond = function(ellapsedTime) {
-    return ellapsedTime >= this.timeValueToUse;
-  }
-
-  this.isReachedFrameRate = function() {
-    var isReached = this.frameCounter >= this.fps || this.frameCounter >= Number.MAX_VALUE;
-
-    if (this.frameCounter >= Number.MAX_VALUE) {
-      this.frameCounter = 0;
+  tick({elapsedTime}) {
+    if (!this.lastTickTime) {
+      this.lastTickTime = performance.now();
     }
 
-    return isReached;
-  }
+    this.timeBetweenTicks = performance.now() - this.lastTickTime;
+    this.lastTickTime = performance.now();
 
-  this.now = function () {
-    return performance.now();
-  }
-
-  this.ellapsedTime = function(previousTime) {
-    if (!previousTime) {
-      previousTime = this.now();
+    if (this.tickCounter == Number.MAX_VALUE) {
+      this.tickCounter = 0;
     }
 
-    return this.now() - previousTime;
-  }
+    this.tickCounter++;
+    this.intervalTimeCounter += elapsedTime;
+    this.loopFrequencyTimeCounter += elapsedTime;
 
+    // Verifica se atingiu o tempo de intervalo definido.
+    if (this.intervalTimeCounter >= this.interval) {
+      this.intervalTimeCounter = 0;
+      this.fpsCounter = 0;
+    }
+
+    if (this.loopFrequencyTimeCounter >= this.loopFrequency) {
+      this.loopFrequencyTimeCounter = 0;
+      this.fpsCounter++;
+      return true;
+    }
+
+    return false;
+  }
+  
 }
