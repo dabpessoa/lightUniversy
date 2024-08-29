@@ -1,24 +1,24 @@
-var GameLogics = function () {
-  this.particles = undefined;
+class GameLogics {
+  constructor({gameCanvas}) {
+    this.gameCanvas = gameCanvas;
 
-  this.create = function ({ gameCanvas }) {
-    gameCanvas.getCanvas().width = window.innerWidth;
-    gameCanvas.getCanvas().height = window.innerHeight;
+    this.gameCanvas.getCanvas().width = window.innerWidth;
+    this.gameCanvas.getCanvas().height = window.innerHeight;
 
     this.particles = new Particles({
-      'gameCanvas': gameCanvas
+      'gameCanvas': this.gameCanvas
     });
   }
 
-  this.render = function (gameCanvas) {
-    var selfParticles = this.particles;
+  render(gameCanvas) {
+    var selfGameCanvas = this.gameCanvas;
     return function () {
       // Clear screen.
-      gameCanvas.clear();
+      selfGameCanvas.clear();
     }
   };
 
-  this.update = function () {
+  update() {
     var selfParticles = this.particles;
     return function (time) {
       // Drawing and Updating Particles background.

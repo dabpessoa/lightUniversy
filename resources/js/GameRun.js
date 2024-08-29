@@ -1,38 +1,34 @@
-var GameRun = function() {
-  if (GameLoop && GameCanvas && GameLogics) {
-    const gameCanvas = new GameCanvas('canvas', '2d');
-    const gameLogics = new GameLogics();
-    
-    // Cria e prepara valores e variáveis.
-    gameLogics.create({
-      'gameCanvas': gameCanvas
-    });
+class GameRun {
+  constructor({canvasId, contextDimension}) {
+    this.gameCanvas = new GameCanvas({"canvasId": canvasId, "contextDimension": contextDimension});
+    this.gameLogics = new GameLogics({"gameCanvas": this.gameCanvas});
 
-    const functionRender = gameLogics.render(gameCanvas);
-    const functionUpdate = gameLogics.update();
-
-    const gameLoop = new GameLoop({
-      'renderLogics': functionRender, 
-      'updateLogics': functionUpdate,
+    this.gameLoop = new GameLoop({
+      'renderLogics': this.gameLogics.render(this.gameCanvas), 
+      'updateLogics': this.gameLogics.update(),
       'fps': new FPS({'fps': 120}) 
     });
+  }
 
-    this.init = function() {
-      gameLoop.start();
-    };
+  init() {
+    this.gameLoop.start();
+  };
 
-    this.stop = function() {
-      gameLoop.stop();
-    };
+  stop() {
+    this.gameLoop.stop();
+  };
 
-    this.fullscreen = function() {
-      gameLoop.fullScreen(gameCanvas.getCanvas());
-    }
+  fullscreen() {
+    this.gameLoop.fullScreen(this.gameCanvas.getCanvas());
+  }
 
-    this.getGameLoop = function() {
-      return gameLoop;
-    }
+  getGameLoop() {
+    return this.gameLoop;
   }
 }
 
-const gameRun = new GameRun();
+const gameRun = new GameRun(
+  {
+    "canvasId": "canvas", 
+    "contextDimension": "2d"
+  });

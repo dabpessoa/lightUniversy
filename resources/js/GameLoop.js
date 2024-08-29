@@ -1,31 +1,33 @@
-var GameLoop = function ({renderLogics, updateLogics, fps = new FPS({'fps': 120}), loopsToSleep = 600}) {
-  this.gameFrameVariable = undefined;
-  this.running = false;
-  this.fps = fps;
-  this.loopsToSleep = loopsToSleep;
-  this.render = renderLogics || function () { console.log("Você deve sobrescrever a função de 'render' do gameloop.") };
-  this.update = updateLogics || function (elapsedTime) { console.log("Você deve sobrescrever a função de 'update' do gameloop.") };
+class GameLoop {
+  constructor({renderLogics, updateLogics, fps = new FPS({'fps': 120}), loopsToSleep = 600}) {
+    this.gameFrameVariable = undefined;
+    this.running = false;
+    this.fps = fps;
+    this.loopsToSleep = loopsToSleep;
+    this.render = renderLogics || function () { console.log("Você deve sobrescrever a função de 'render' do gameloop.") };
+    this.update = updateLogics || function (elapsedTime) { console.log("Você deve sobrescrever a função de 'update' do gameloop.") };
+  }
 
-  this.start = function () {
+  start() {
     this.running = true;
     if (!this.gameFrameVariable) {
       this.process(performance.now());
     }
-  };
+  }
 
-  this.stop = function () {
+  stop() {
     this.running = false;
     if (this.gameFrameVariable) {
       window.cancelAnimationFrame(this.gameFrameVariable);
     }
     this.gameFrameVariable = undefined;
-  };
+  }
 
-  this.continue = function () {
+  continue() {
     this.start();
-  };
+  }
 
-  this.process = async function (previousTime) {
+  async process(previousTime) {
     var now = performance.now();
     var elapsedTime = now - previousTime;
     previousTime = now;
@@ -48,9 +50,9 @@ var GameLoop = function ({renderLogics, updateLogics, fps = new FPS({'fps': 120}
         }
       );
     }
-  };
+  }
 
-  this.fullScreen = function (element) {
+  fullScreen(element) {
     // full-screen available?
     if (document.fullscreenEnabled ||
       document.webkitFullscreenEnabled ||
@@ -68,17 +70,16 @@ var GameLoop = function ({renderLogics, updateLogics, fps = new FPS({'fps': 120}
         element.msRequestFullscreen();
       }
     }
-  };
+  }
 
-  this.isRunning = function () {
+  isRunning() {
     return this.running;
   }
 
-  this.getFPS = function() {
+  getFPS() {
     return this.fps;
   }
-
-};
+}
 
 class FPS {
   constructor({fps, interval = 1000 /* milliseconds */}) {
