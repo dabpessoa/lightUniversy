@@ -26,10 +26,10 @@ class SpeedPosition {
     this.speedY = speedY;
   }
 
-  proccessPositionByTime(time) { // millisecond time var.
+  proccessPositionByTime(elepsedTime) { // millisecond time var.
     // pixels / millisecond
-    this.posX += (this.speedX * time);
-    this.posY += (this.speedY * time);
+    this.posX += (this.speedX * elepsedTime);
+    this.posY += (this.speedY * elepsedTime);
  }
 }
 
