@@ -9,8 +9,8 @@ class GameLogics {
       'numParticles': 150,
       'colors': [
         '255, 255, 255',
-        '0, 255, 255',
-        '255, 255, 0'
+        '125, 190, 255',
+        '255, 255, 169'
       ]
     });
   }
@@ -19,13 +19,16 @@ class GameLogics {
     // Clear screen.
     this.gameCanvas.clear();
 
+    // Drawing Particles background.
+    this.particles.draw();
+
     this.gameCanvas.context.fillStyle = 'red';
     this.gameCanvas.context.fillRect(10, 10, 200, 200);
   };
 
   update(elapsedTime) {
-    // Drawing and Updating Particles background.
-    this.particles.drawAndUpdate(elapsedTime);
+    // Updating Particles background.
+    this.particles.update(elapsedTime);
   };
 
 }

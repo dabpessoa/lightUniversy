@@ -10,7 +10,7 @@ class Particle {
 
         this.speedPosition = new SpeedPosition({
             "posX": random(0, this.gameCanvas.getCanvas().width),
-            "posY": random(0, this.gameCanvas.getCanvas().height / this.totalParticles * this.particleNumber),
+            "posY": random(0, this.gameCanvas.getCanvas().height),
             "speedX": random(this.particleConfig.minSpeed, this.particleConfig.maxSpeed),
             "speedY": random(this.particleConfig.minSpeed, this.particleConfig.maxSpeed)
         });
@@ -29,18 +29,12 @@ class Particle {
     }
 
     checkReset() {
-        if (this.speedPosition.posX > this.gameCanvas.getCanvas().width + this.radius || this.speedPosition.posY > this.gameCanvas.getCanvas().height + this.radius) {
-            var rand = random(0, 1);
+        if (this.speedPosition.posX > this.gameCanvas.getCanvas().width + this.radius) {
+            this.speedPosition.posX = random(0, this.gameCanvas.getCanvas().width)
+        }
 
-            if (rand > .5) {
-                // 50% chance particle comes from left side of window...
-                this.speedPosition.posX = -this.radius;
-                this.speedPosition.posY = random(0, this.gameCanvas.getCanvas().height);
-            } else {
-                //... or bottom of window
-                this.speedPosition.posX = random(0, this.gameCanvas.getCanvas().width);
-                this.speedPosition.posY = this.gameCanvas.getCanvas().height + this.radius;
-            }
+        if (this.speedPosition.posY > this.gameCanvas.getCanvas().height + this.radius) {
+            this.speedPosition.posY = random(0, this.gameCanvas.getCanvas().height)
         }
     }
 }
@@ -54,9 +48,9 @@ class Particles {
         ];
 
         var particleConfig = new ParticleConfig({
-            'minRadius': 0,
+            'minRadius': .01,
             'maxRadius': 1.5,
-            'minOpacity': 0,
+            'minOpacity': .01,
             'maxOpacity': 1,
             'minSpeed': .00001,
             'maxSpeed': .003,
@@ -89,7 +83,6 @@ class Particles {
 
     update(elapsedTime) {
         for (var i = 0; i < this.numParticles; i++) {
-            // update
             this.particlesArray[i].update(elapsedTime);
         }
     }
